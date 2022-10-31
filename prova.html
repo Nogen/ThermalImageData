@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Grayscaling and inverting color | Canvas pixel manipulation</title>
+</head>
+
+<body>
+  <canvas id="canvas" width="1000" height="1000"></canvas>
+  <script src="./prova.js"></script>
+  <script>
+    console.log(dataPROVA);
+    const getColorIndicesForCoord = (x, y, width) => {
+      const red = y * (width * 4) + x * 4;
+      return [red, red + 1, red + 2, red + 3];
+    };
+
+    function setPixel(imageData, x, y, r, g, b, a) {
+      var index = 4 * (x + y * imageData.width);
+      imageData.data[index + 0] = r;
+      imageData.data[index + 1] = g;
+      imageData.data[index + 2] = b;
+      imageData.data[index + 3] = a;
+    }
+
+    function TempToRGB(temp, minTemp, maxTemp) {
+      const med = (minTemp + maxTemp) / 2
+      const redVal = 255 / (maxTemp - minTemp) * (temp - minTemp);
+      const greenVal = 255 / (maxTemp - minTemp) * Math.abs(temp - med);
+      const blueVal = 255 / (maxTemp - minTemp) * (maxTemp - temp);
+      return { r: redVal, g: greenVal, b: blueVal }
+    }
+
+    function TempToGray(temp, minTemp, maxTemp) {
+      return temp * 255 / maxTemp;
+    }
+
+    const canvas = document.getElementById('canvas');
+    const width = dataPROVA[0].length;
+    const height = dataPROVA.length;
+    const min = 10.39;
+    const max = 46.39;
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.createImageData(dataPROVA[0].length, dataPROVA.length);
+    // Iterate through every pixel
+    // for (let i = 0; i < imageData.data.length; i += 4) {
+    //   // Modify pixel data
+    //   imageData.data[i + 0] = 190;  // R value
+    //   imageData.data[i + 1] = 0;    // G value
+    //   imageData.data[i + 2] = 210;  // B value
+    //   imageData.data[i + 3] = 255;  // A value
+    // }
+
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        const color = TempToRGB(dataPROVA[i][j], min, max)
+        setPixel(imageData, i, j, color.r, color.g, color.b, 255);
+        // const grayScale = TempToGray(dataPROVA[i][j], min, max);
+        // setPixel(imageData, i, j, grayScale, grayScale, grayScale, 255);
+      }
+    }
+
+    // Draw image data to the canvas
+    ctx.putImageData(imageData, 0, 0);
+
+    // setPixel(imageData, 50, 50, 0, 0, 0, 255);
+    // ctx.putImageData(imageData, 0, 0);
+
+
+  </script>
+</body>
+
+</html>
