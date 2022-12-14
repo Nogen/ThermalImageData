@@ -6,10 +6,15 @@ with open('dataCompressed.js') as js:
     data = js.read()
     dataJ = json.loads(data)
 
-print(dataJ)
+
+print(len(dataJ), len(dataJ[0]))
+minTemp = 4.41
+maxTemp = 67.02
+
+"""
 if dataJ:
     with open('prova.bin', 'wb') as f:
-        print(dataJ[0])
         for i in dataJ:
             for j in i:
-                f.write(int(j * 100).to_bytes(2, 'little'))
+                f.write(int((j - minTemp) * 100).to_bytes(2, 'little'))
+"""
